@@ -39,10 +39,10 @@
 		)
 	);
 
-	// Set our options and disable our `Profiler` by default.
+	// Set our options and enable our `Profiler` by default.
 	$options['bootstrap'] = false;
 	Libraries::add('li3_profiler', $options);
-	\Profiler::disable();
+	\Profiler::enable();
 
 	// Set our jQuery options.
 	if ($options['jquery']) {
@@ -65,17 +65,11 @@
 	 * we need to wait for the `Dispatcher` to start up before we know where we are.
 	 */
 	Filters::apply('lithium\action\Dispatcher', '_callable', function($self, $params, $chain) {
-		$controller = $chain->next($self, $params, $chain);
-
-		/**
-		 * Check the `Environment` and if it's not the correct one, stop the
-		 * profiler from logging.
-		 */
-		if (Environment::is(Libraries::get('li3_profiler', 'environment'))) {
+		if (!Environment::is(Libraries::get('li3_profiler', 'environment'))) {
 			// Enable the profiler.
-			\Profiler::enable();
-
-			// Inject our profiling HTML.
+			\Profiler::disable();
+		} else {
+			$controller = $chain->next($self, $params, $chain);
 			if (Libraries::get('li3_profiler', 'inject')) {
 
 				/**
@@ -103,8 +97,9 @@
 					});
 				}
 			}
+			return $controller;
 		}
-		return $controller;
+		return $chain->next($self, $params, $chain);
 	});
 
 	// Attach our separate filters to the application.
