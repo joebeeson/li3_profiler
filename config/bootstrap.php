@@ -25,6 +25,9 @@
 		// Set which environment we should profile.
 		'environment' => 'development',
 
+		// If we should automatically inject the HTML to the view.
+		'inject' => true,
+
 		// Setup our default filters for the request.
 		'filters' => array(
 			'action\Dispatcher',
@@ -36,12 +39,10 @@
 		)
 	);
 
-	// Seems a bit silly but we log away our $options changes.
+	// Set our options and disable our `Profiler` by default.
 	$options['bootstrap'] = false;
 	Libraries::add('li3_profiler', $options);
-
-	// Enable the profiler.
-	\Profiler::enable();
+	\Profiler::disable();
 
 	// Set our jQuery options.
 	if ($options['jquery']) {
@@ -64,39 +65,44 @@
 	 * we need to wait for the `Dispatcher` to start up before we know where we are.
 	 */
 	Filters::apply('lithium\action\Dispatcher', '_callable', function($self, $params, $chain) {
+		$controller = $chain->next($self, $params, $chain);
 
 		/**
 		 * Check the `Environment` and if it's not the correct one, stop the
 		 * profiler from logging.
 		 */
-		if (!Environment::is(Libraries::get('li3_profiler', 'environment'))) {
-			\Profiler::disable();
-		}
-		$controller = $chain->next($self, $params, $chain);
+		if (Environment::is(Libraries::get('li3_profiler', 'environment'))) {
+			// Enable the profiler.
+			\Profiler::enable();
 
-		/**
-		 * If we have a `Controller` object we will filter it so that we can
-		 * inject our rendering HTML.
-		 */
-		if (is_a($controller, '\lithium\action\Controller')) {
-			$controller->applyFilter('__invoke', function($self, $params, $chain) {
-				$response = $chain->next($self, $params, $chain);
-				if ($response->type === 'text/html') {
+			// Inject our profiling HTML.
+			if (Libraries::get('li3_profiler', 'inject')) {
 
-					/**
-					 * Here we tack in our rendering if the `Response` object happens
-					 * to be "text/html" and we are enabled.
-					 */
-					ob_start();
-					\Profiler::render();
-					$response->body = str_replace(
-						'</body>',
-						ob_get_clean() . '</body>',
-						$response->body
-					);
+				/**
+				 * If we have a `Controller` object we will filter it so that we can
+				 * inject our rendering HTML.
+				 */
+				if (is_a($controller, '\lithium\action\Controller')) {
+					$controller->applyFilter('__invoke', function($self, $params, $chain) {
+						$response = $chain->next($self, $params, $chain);
+						if ($response->type === 'text/html') {
+
+							/**
+							 * Here we tack in our rendering if the `Response` object happens
+							 * to be "text/html" and we are enabled.
+							 */
+							ob_start();
+							\Profiler::render();
+							$response->body = str_replace(
+								'</body>',
+								ob_get_clean() . '</body>',
+								$response->body
+							);
+						}
+						return $response;
+					});
 				}
-				return $response;
-			});
+			}
 		}
 		return $controller;
 	});

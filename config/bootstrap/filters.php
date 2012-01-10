@@ -9,6 +9,8 @@
 		$filter = str_replace('\\', '/', $filter) . '.php';
 		if (file_exists($directory . $filter)) {
 			include $directory . $filter;
+		} elseif (file_exists($filter)) {
+			include $filter;
 		}
 	}
 
