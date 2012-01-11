@@ -10,7 +10,8 @@
 	        'includePath' => dirname(dirname(__DIR__)) . '/libraries/php-profiler',
 			'path' => dirname(dirname(__DIR__)) . '/libraries/php-profiler',
 	        'transform' => function($class, $config) {
-		        $class = strtolower(array_pop(explode('\\', $class)));
+		        $class = explode('\\', $class);
+		        $class = strtolower(array_pop($class));
 		        $file = $config['path'] . '/' . $class . $config['suffix'];
 	            return file_exists($file) ? $file : null;
 	        }
