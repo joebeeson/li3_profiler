@@ -29,7 +29,7 @@ Add the library to your application's `app/config/bootstrap/libraries.php` file.
 
 Visit your application, you should see something similar to the following image...
 
-![Example](http://i.imgur.com/9YxLE.png)
+![Example](http://i.imgur.com/IqRMZ.png)
 
 ## Configuration
 
