@@ -19,6 +19,15 @@
 				$profiler->end();
 				return $response;
 			});
+			$connection->applyFilter('read', function($self, $params, $chain) {
+				$response = $chain->next($self, $params, $chain);
+				\Profiler::start($response->model());
+				$info = $response->result()->resource();
+				$profiler = \Profiler::sqlStart(json_encode($info->info()));
+				$profiler->end();
+				\Profiler::end($response->model());
+				return $response;
+			});
 		}
 
 		// Return the controller.
