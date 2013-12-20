@@ -8,7 +8,22 @@
             "email": "jbeeson@gmail.com"
         }
     ],
+    "repositories" : [
+        "profiler": {
+            "type": "package",
+            "package": {
+                "name": "jimrubenstein/php-profiler",
+                "version": "1.0",
+                "source": {
+                    "url": "git@github.com:jimrubenstein/php-profiler.git",
+                    "type": "git",
+                    "reference": "HEAD"
+                }
+            }
+        }
+    ],
     "require": {
-        "composer/installers": "*"
+        "composer/installers": "*",
+        "jimrubenstein/php-profiler": "@dev"
     }
 }
