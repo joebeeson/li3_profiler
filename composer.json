@@ -1,5 +1,5 @@
 {
-    "name": "notomato/li3_paginate",
+    "name": "joebeeson/li3_profiler",
     "description": "li3_profiler is a Lithium library for profiling requests built on Jim Rubenstein's PHP Profiler.",
     "type": "lithium-library",
     "authors": [
