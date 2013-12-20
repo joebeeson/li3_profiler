@@ -24,6 +24,6 @@
     },
     "require": {
         "composer/installers": "*",
-        "jimrubenstein/php-profiler": "@dev"
+        "jimrubenstein/php-profiler": "*"
     }
 }
