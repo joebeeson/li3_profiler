@@ -7,24 +7,5 @@
             "name": "Joe Beeson",
             "email": "jbeeson@gmail.com"
         }
-    ],
-    "repositories" : [
-        {
-            "type": "library",
-            "package": {
-                "name": "jimrubenstein/php-profiler",
-                "version": "1.0",
-                "source": {
-                    "url": "git@github.com:jimrubenstein/php-profiler.git",
-                    "type": "git",
-                    "reference": "HEAD"
-                }
-            }
-        }
-    ],
-    "require": {
-        "composer/installers": "*",
-        "jimrubenstein/php-profiler": "@dev"
-    },
-    "minimum-stability": "dev"
+    ]
 }
