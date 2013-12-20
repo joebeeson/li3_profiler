@@ -9,7 +9,7 @@
         }
     ],
     "repositories" : {
-        "profiler": {
+        "jimrubenstein/php-profiler": {
             "type": "package",
             "package": {
                 "name": "jimrubenstein/php-profiler",
